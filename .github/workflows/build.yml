@@ -1,0 +1,29 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Create project
+        run: dotnet new console --force
+
+      - name: Publish
+        run: dotnet publish -r win-x64 -c Release --self-contained true
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: MTALauncher
+          path: bin/Release/net8.0/win-x64/publish/
