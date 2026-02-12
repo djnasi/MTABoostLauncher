@@ -16,15 +16,18 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore
-        run: dotnet restore
+      - name: Create project
+        run: |
+          dotnet new console -n App
+          move Program.cs App/Program.cs
 
       - name: Publish
-        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+        run: |
+          cd App
+          dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
           name: MTALauncher
-          path: |
-            **/publish/*.exe
+          path: App/bin/Release/net8.0/win-x64/publish/*.exe
